@@ -1,7 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'maven-publish'
 apply from: "$rootDir/gnag.gradle"
 apply from: "$rootDir/detekt.gradle"
 
