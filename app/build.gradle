@@ -16,7 +16,7 @@ android {
 
 dependencies {
     debugImplementation project(':catalog')
-    releaseImplementation 'com.getfront:catalog:1.0.0-SNAPSHOT'
+    releaseImplementation 'com.getfront:catalog:1.0.0-beta01'
 
     implementation libs.androidx.appcompat
     implementation libs.androidx.core.ktx
