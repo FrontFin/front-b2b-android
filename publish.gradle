@@ -19,6 +19,7 @@ afterEvaluate {
                         url = 'https://github.com/FrontFin/front-b2b-android'
                         connection = 'scm:git:git://github.com/FrontFin/front-b2b-android.git'
                         developerConnection = 'scm:git:ssh://git@github.com/FrontFin/front-b2b-android.git'
+                        tag = commitHash
                     }
                     licenses {
                         license {
@@ -53,4 +54,8 @@ afterEvaluate {
 // See https://docs.gradle.org/current/userguide/signing_plugin.html
 signing {
     sign publishing.publications
+}
+
+static def getCommitHash() {
+    return 'git rev-parse --verify HEAD'.execute().text.trim()
 }

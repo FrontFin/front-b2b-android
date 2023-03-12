@@ -26,7 +26,6 @@ dependencies {
     implementation libs.kotlinx.coroutines.core
 }
 
-// use -PPUBLISH_VERSION to override the version
 task deploy(type: GradleBuild) {
     tasks = ['clean', 'gnagCheck', 'build', 'publish']
 }
