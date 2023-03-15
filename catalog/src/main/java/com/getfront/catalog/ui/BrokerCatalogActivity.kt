@@ -45,17 +45,21 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.close.onClick { finish() }
-        binding.back.onClick { onBackPressed() }
+        binding.back.onClick { tryWebViewGoBack() }
 
         observeCatalogResponse()
         observeThrowable()
         openWebView(link)
     }
 
-    override fun onBackPressed() {
+    private fun tryWebViewGoBack() {
         binding.webView.apply {
             if (canGoBack()) goBack() else finish()
         }
+    }
+
+    override fun onBackPressed() {
+       tryWebViewGoBack()
     }
 
     private fun observeCatalogResponse() {
@@ -100,7 +104,6 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
     }
 
     private fun onTitle(title: CatalogResponse.Title) {
-        binding.title.text = title.title
         binding.toolbar.isGone = title.hideTitle == true
         binding.back.isGone = title.hideBackButton == true
     }
@@ -130,9 +133,7 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
 
     inner class ChromeClient : BrokerWebChromeClient() {
         override fun launchWebView(url: String) {
-            WebViewActivity.launch(
-                this@BrokerCatalogActivity, url, binding.title.text.toString()
-            )
+            WebViewActivity.launch(this@BrokerCatalogActivity, url)
         }
     }
 

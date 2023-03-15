@@ -6,4 +6,5 @@
     <color name="shade_white_80">#CCFFFFFF</color>
     <color name="white">#FFFFFFFF</color>
     <color name="primary_yellow">#F7C366</color>
+    <color name="background">#FBFBFB</color>
 </resources>
