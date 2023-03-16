@@ -9,8 +9,8 @@
     </style>
 
     <style name="BrokerCatalogTheme" parent="FrontB2BCatalogTheme.NoActionBar">
-        <item name="android:statusBarColor">@color/secondary_raisin_black</item>
-        <item name="android:navigationBarColor">@color/secondary_raisin_black</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
     </style>
 
 </resources>
