@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
@@ -18,6 +19,7 @@ import com.getfront.catalog.ui.web.FrontWebViewClient
 import com.getfront.catalog.ui.web.JSBridge
 import com.getfront.catalog.utils.getParcelableList
 import com.getfront.catalog.utils.intent
+import com.getfront.catalog.utils.isFrontUrl
 import com.getfront.catalog.utils.lazyNone
 import com.getfront.catalog.utils.observeEvent
 import com.getfront.catalog.utils.onClick
@@ -82,7 +84,12 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
             settings.setSupportMultipleWindows(true)
             addJavascriptInterface(JSBridge(viewModel), JSBridge.NAME)
             setBackgroundColor(Color.TRANSPARENT)
-            webViewClient = FrontWebViewClient()
+            webViewClient = object : FrontWebViewClient() {
+                override fun onPageCommitVisible(view: WebView?, url: String?) {
+                    super.onPageCommitVisible(view, url)
+                    binding.toolbar.isGone = isFrontUrl(url)
+                }
+            }
             webChromeClient = chromeClient
             loadUrl(url)
         }
