@@ -21,6 +21,7 @@ internal class ParseCatalogJsonUseCase(
         when (event.type) {
             Type.done -> CatalogResponse.Done
             Type.close -> CatalogResponse.Close
+            Type.showClose -> CatalogResponse.ShowClose
             Type.brokerageAccountAccessToken -> {
                 val response = converter.parse<JsAccessTokens>(json)
                 val payload = requireNotNull(response.payload) { "Empty token payload" }

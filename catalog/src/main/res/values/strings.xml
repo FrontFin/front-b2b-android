@@ -2,4 +2,8 @@
 <resources>
     <string name="close">Close</string>
     <string name="okay">OK</string>
+    <string name="onCloseDialog_title">Are you sure you want to exit?</string>
+    <string name="onCloseDialog_message">Your progress will be lost.</string>
+    <string name="onCloseDialog_positiveButton">Yes, exit</string>
+    <string name="onCloseDialog_neutralButton">No, continue</string>
 </resources>

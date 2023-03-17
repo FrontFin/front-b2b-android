@@ -33,7 +33,6 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
 
     private val link get() = intent.getStringExtra(LINK)!!
     private val linkHost by lazyNone { URL(link).host }
-    private var lastUrl = ""
 
     private val binding by viewBinding(BrokerCatalogActivityBinding::inflate)
 
@@ -48,6 +47,7 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
             isAppearanceLightStatusBars = true
         }
 
+        binding.back.onClick { onBack() }
         binding.close.onClick { onClose() }
         binding.toolbar.isVisible = false
 
@@ -56,12 +56,23 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
         openWebView(link)
     }
 
-    private fun onClose() {
-        binding.webView.loadUrl(lastUrl)
+    override fun onBackPressed() {
+        onBack()
     }
 
-    override fun onBackPressed() {
-        // binding.webView.evaluateJavascript()
+    private fun onBack() {
+        binding.webView.evaluateJavascript("window.history.go(-1)", null)
+    }
+
+    private fun onClose() {
+        alertDialog {
+            setTitle(R.string.onCloseDialog_title)
+            setMessage(R.string.onCloseDialog_message)
+            setPositiveButton(R.string.onCloseDialog_positiveButton) { _, _ -> finish() }
+            setNeutralButton(R.string.onCloseDialog_neutralButton, null)
+            setCancelable(false)
+            show()
+        }
     }
 
     private fun observeCatalogResponse() {
@@ -72,9 +83,9 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
 
     private fun onCatalogResponse(response: CatalogResponse) = when (response) {
         is CatalogResponse.Connected -> onConnected(response)
+        is CatalogResponse.Close, CatalogResponse.Done -> finish()
+        is CatalogResponse.ShowClose -> onClose()
         is CatalogResponse.Undefined -> Unit
-        is CatalogResponse.Close -> finish()
-        is CatalogResponse.Done -> finish()
     }
 
     private fun onConnected(connected: CatalogResponse.Connected) {
@@ -121,17 +132,6 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
         override fun onPageCommitVisible(view: WebView?, url: String?) {
             super.onPageCommitVisible(view, url)
             binding.toolbar.isGone = isFrontUrl(url)
-        }
-
-        override fun doUpdateVisitedHistory(
-            view: WebView?,
-            url: String?,
-            isReload: Boolean
-        ) {
-            if (url != null && isFrontUrl(url)) {
-                lastUrl = url
-            }
-            super.doUpdateVisitedHistory(view, url, isReload)
         }
 
         private fun isFrontUrl(url: String?): Boolean {

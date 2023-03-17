@@ -12,6 +12,7 @@ internal enum class Type {
     error,
     close,
     done,
+    showClose,
 }
 
 internal data class Payload(
