@@ -43,7 +43,7 @@ class ConnectActivity : AppCompatActivity() {
          */
         binding.connectBtn.setOnClickListener {
             catalogResultLauncher.launch(
-                "catalogLink"
+                "https://front-web-platform-dev.azurewebsites.net:443/b2b-iframe/c48025af-5bbd-424f-b98e-4702c368085f/broker-connect?auth_code=vXELEN6V6QINOjFRN4Z1oTq-vVGXVeumlfckyIhrAKTKGsvavjlyGYYvg_ElbRy58zaXKoEs2fPwUunUOK1zbQ"
             )
         }
     }

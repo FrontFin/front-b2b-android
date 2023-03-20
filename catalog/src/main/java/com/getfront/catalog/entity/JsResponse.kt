@@ -1,10 +1,8 @@
 package com.getfront.catalog.entity
 
-internal data class JsType(val type: Type?)
-
-internal data class JsAccessTokens(val payload: Payload?)
-
-internal data class JsError(val errorMessage: String?)
+internal data class JsType(
+    val type: Type?
+)
 
 @Suppress("EnumEntryName")
 internal enum class Type {
@@ -14,6 +12,14 @@ internal enum class Type {
     done,
     showClose,
 }
+
+internal data class JsError(
+    val errorMessage: String?
+)
+
+internal data class JsAccessTokens(
+    val payload: Payload?
+)
 
 internal data class Payload(
     val accountTokens: List<AccountToken>,

@@ -8,12 +8,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.getfront.catalog.R
 import com.getfront.catalog.databinding.BrokerCatalogActivityBinding
-import com.getfront.catalog.entity.CatalogResponse
+import com.getfront.catalog.entity.CatalogEvent
 import com.getfront.catalog.entity.FrontAccount
 import com.getfront.catalog.ui.web.BrokerWebChromeClient
 import com.getfront.catalog.ui.web.FrontWebViewClient
@@ -27,6 +26,7 @@ import com.getfront.catalog.utils.onClick
 import com.getfront.catalog.utils.showToast
 import com.getfront.catalog.utils.viewBinding
 import com.getfront.catalog.utils.viewModel
+import com.getfront.catalog.utils.windowInsetsController
 import java.net.URL
 
 internal class BrokerCatalogActivity : AppCompatActivity() {
@@ -42,16 +42,16 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        WindowInsetsControllerCompat(window, window.decorView).apply {
+        windowInsetsController {
             isAppearanceLightNavigationBars = true
             isAppearanceLightStatusBars = true
         }
 
         binding.back.onClick { onBack() }
-        binding.close.onClick { onClose() }
+        binding.close.onClick { showCloseDialog() }
         binding.toolbar.isVisible = false
 
-        observeCatalogResponse()
+        observeCatalogEvent()
         observeThrowable()
         openWebView(link)
     }
@@ -64,7 +64,7 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
         binding.webView.evaluateJavascript("window.history.go(-1)", null)
     }
 
-    private fun onClose() {
+    private fun showCloseDialog() {
         alertDialog {
             setTitle(R.string.onCloseDialog_title)
             setMessage(R.string.onCloseDialog_message)
@@ -75,20 +75,18 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeCatalogResponse() {
-        observeEvent(viewModel.catalogResponse) {
-            onCatalogResponse(it)
+    private fun observeCatalogEvent() {
+        observeEvent(viewModel.catalogEvent) { event ->
+            when (event) {
+                is CatalogEvent.Connected -> onConnected(event)
+                is CatalogEvent.Close, CatalogEvent.Done -> finish()
+                is CatalogEvent.ShowClose -> showCloseDialog()
+                is CatalogEvent.Undefined -> Unit
+            }
         }
     }
 
-    private fun onCatalogResponse(response: CatalogResponse) = when (response) {
-        is CatalogResponse.Connected -> onConnected(response)
-        is CatalogResponse.Close, CatalogResponse.Done -> finish()
-        is CatalogResponse.ShowClose -> onClose()
-        is CatalogResponse.Undefined -> Unit
-    }
-
-    private fun onConnected(connected: CatalogResponse.Connected) {
+    private fun onConnected(connected: CatalogEvent.Connected) {
         val list = connected.accounts
         val arrayList = if (list is ArrayList<FrontAccount>) list else ArrayList(list)
         val data = Intent().apply { putParcelableArrayListExtra(DATA, arrayList) }
