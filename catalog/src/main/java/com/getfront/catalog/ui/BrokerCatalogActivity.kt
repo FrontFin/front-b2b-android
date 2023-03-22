@@ -127,6 +127,11 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
     }
 
     inner class WebClient : FrontWebViewClient() {
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            binding.progress.isVisible = false
+        }
+
         override fun onPageCommitVisible(view: WebView?, url: String?) {
             super.onPageCommitVisible(view, url)
             binding.toolbar.isGone = isFrontUrl(url)
