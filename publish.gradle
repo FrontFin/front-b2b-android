@@ -43,8 +43,8 @@ afterEvaluate {
                         ? 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
                         : 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
                 credentials {
-                    username ossrhUsername
-                    password ossrhPassword
+                    username propOrEnv('ossrhUsername')
+                    password propOrEnv('ossrhPassword')
                 }
             }
         }
@@ -58,4 +58,8 @@ signing {
 
 static def getCommitHash() {
     return 'git rev-parse --verify HEAD'.execute().text.trim()
+}
+
+def propOrEnv(String name) {
+    return findProperty(name) ?: System.getenv(name)
 }
