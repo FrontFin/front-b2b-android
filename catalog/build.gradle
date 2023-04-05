@@ -3,7 +3,7 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
-apply from: "$rootDir/publish.gradle"
+apply from: "$rootDir/gradle/publish.gradle"
 
 android {
     namespace 'com.getfront.catalog'
