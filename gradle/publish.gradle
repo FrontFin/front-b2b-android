@@ -64,6 +64,5 @@ static def getCommitHash() {
 }
 
 def isReleaseVersion() {
-    return publishVersion != null && publishVersion?.trim() != ''
-            && !publishVersion?.endsWith("SNAPSHOT")
+    return publishVersion != null && !publishVersion.endsWith("SNAPSHOT")
 }
