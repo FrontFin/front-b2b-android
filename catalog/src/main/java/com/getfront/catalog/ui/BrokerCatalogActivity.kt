@@ -5,8 +5,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.os.Message
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -14,9 +19,6 @@ import com.getfront.catalog.R
 import com.getfront.catalog.databinding.BrokerCatalogActivityBinding
 import com.getfront.catalog.entity.CatalogEvent
 import com.getfront.catalog.entity.FrontAccount
-import com.getfront.catalog.ui.web.BrokerWebChromeClient
-import com.getfront.catalog.ui.web.FrontWebViewClient
-import com.getfront.catalog.ui.web.JSBridge
 import com.getfront.catalog.utils.alertDialog
 import com.getfront.catalog.utils.getParcelableList
 import com.getfront.catalog.utils.intent
@@ -126,7 +128,7 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
         }
     }
 
-    inner class WebClient : FrontWebViewClient() {
+    inner class WebClient : WebViewClient() {
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
             binding.progress.isVisible = false
@@ -144,11 +146,27 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
                 false
             }
         }
+
+        override fun shouldOverrideUrlLoading(
+            view: WebView?,
+            request: WebResourceRequest?
+        ): Boolean {
+            return false
+        }
     }
 
-    inner class ChromeClient : BrokerWebChromeClient() {
-        override fun launchWebView(url: String) {
-            WebViewActivity.launch(this@BrokerCatalogActivity, url)
+    inner class ChromeClient : WebChromeClient() {
+        override fun onCreateWindow(
+            view: WebView?,
+            isDialog: Boolean,
+            isUserGesture: Boolean,
+            resultMsg: Message?
+        ): Boolean {
+            val data = view?.hitTestResult?.extra
+            if (data.isNullOrBlank().not()) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(data)))
+            }
+            return false
         }
     }
 
