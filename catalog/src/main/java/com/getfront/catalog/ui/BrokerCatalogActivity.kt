@@ -35,9 +35,7 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
 
     private val link get() = intent.getStringExtra(LINK)!!
     private val linkHost by lazyNone { URL(link).host }
-
     private val binding by viewBinding(BrokerCatalogActivityBinding::inflate)
-
     private val viewModel by viewModel<BrokerConnectViewModel>(BrokerConnectViewModel.Factory())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,18 +154,44 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
     }
 
     inner class ChromeClient : WebChromeClient() {
+
+        private val target = WebView(this@BrokerCatalogActivity).apply {
+            webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): Boolean {
+                    request?.url?.let { actionView(it) }
+                    return super.shouldOverrideUrlLoading(view, request)
+                }
+            }
+        }
+
         override fun onCreateWindow(
             view: WebView?,
             isDialog: Boolean,
             isUserGesture: Boolean,
             resultMsg: Message?
         ): Boolean {
-            val data = view?.hitTestResult?.extra
-            if (data.isNullOrBlank().not()) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(data)))
+            val url = view?.hitTestResult?.extra
+
+            return when {
+                !url.isNullOrBlank() -> {
+                    actionView(Uri.parse(url))
+                    false
+                }
+                resultMsg != null -> {
+                    (resultMsg.obj as WebView.WebViewTransport).webView = target
+                    resultMsg.sendToTarget()
+                    true
+                }
+                else -> false
             }
-            return false
         }
+    }
+
+    private fun actionView(uri: Uri) {
+        startActivity(Intent(Intent.ACTION_VIEW, uri))
     }
 
     companion object {
