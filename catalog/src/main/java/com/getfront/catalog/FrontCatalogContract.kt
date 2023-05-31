@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import com.getfront.catalog.entity.FrontAccount
+import com.getfront.catalog.entity.FrontPayload
 import com.getfront.catalog.ui.BrokerCatalogActivity
 
 /**
@@ -22,7 +23,7 @@ import com.getfront.catalog.ui.BrokerCatalogActivity
  * ```
  */
 @Suppress("unused")
-class FrontCatalogContract : ActivityResultContract<String, List<FrontAccount>?>() {
+class FrontCatalogContract : ActivityResultContract<String, FrontPayload?>() {
 
     /**
      * Returns intent to start catalog activity.
@@ -34,7 +35,7 @@ class FrontCatalogContract : ActivityResultContract<String, List<FrontAccount>?>
     /**
      * Extracts list of [FrontAccount]s from activity result intent.
      */
-    override fun parseResult(resultCode: Int, intent: Intent?): List<FrontAccount>? {
-        return BrokerCatalogActivity.getAccounts(resultCode, intent)
+    override fun parseResult(resultCode: Int, intent: Intent?): FrontPayload? {
+        return BrokerCatalogActivity.getPayload(resultCode, intent)
     }
 }

@@ -15,6 +15,17 @@ internal inline fun <reified T : Parcelable> getParcelableList(
     } else intent.getParcelableArrayListExtra(key)
 }
 
+@Suppress("DEPRECATION", "UnsafeOptInUsageError")
+internal inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(
+    key: String
+): T? {
+    return if (BuildCompat.isAtLeastT()) {
+        getParcelableExtra(key, T::class.java)
+    } else {
+        getParcelableExtra(key)
+    }
+}
+
 internal inline fun <reified T> intent(context: Context): Intent {
     return Intent(context, T::class.java)
 }

@@ -17,9 +17,11 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.getfront.catalog.R
 import com.getfront.catalog.databinding.BrokerCatalogActivityBinding
-import com.getfront.catalog.entity.CatalogEvent
 import com.getfront.catalog.entity.FrontAccount
+import com.getfront.catalog.entity.FrontPayload
+import com.getfront.catalog.entity.LinkEvent
 import com.getfront.catalog.utils.alertDialog
+import com.getfront.catalog.utils.getParcelableExtraCompat
 import com.getfront.catalog.utils.getParcelableList
 import com.getfront.catalog.utils.intent
 import com.getfront.catalog.utils.lazyNone
@@ -76,17 +78,22 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
     }
 
     private fun observeCatalogEvent() {
-        observeEvent(viewModel.catalogEvent) { event ->
+        observeEvent(viewModel.linkEvent) { event ->
             when (event) {
-                is CatalogEvent.Connected -> onConnected(event)
-                is CatalogEvent.Close, CatalogEvent.Done -> finish()
-                is CatalogEvent.ShowClose -> showCloseDialog()
-                is CatalogEvent.Undefined -> Unit
+                is LinkEvent.Close, LinkEvent.Done -> finish()
+                is LinkEvent.ShowClose -> showCloseDialog()
+                is LinkEvent.Payload -> putPayload(event.payload)
+                is LinkEvent.Undefined -> Unit
             }
         }
     }
 
-    private fun onConnected(connected: CatalogEvent.Connected) {
+    private fun putPayload(payload: FrontPayload) {
+        val data = Intent().apply { putExtra(DATA, payload) }
+        setResult(RESULT_OK, data)
+    }
+
+    private fun onConnected(connected: LinkEvent.Connected) {
         val list = connected.accounts
         val arrayList = if (list is ArrayList<FrontAccount>) list else ArrayList(list)
         val data = Intent().apply { putParcelableArrayListExtra(DATA, arrayList) }
@@ -207,6 +214,12 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
         fun getAccounts(resultCode: Int, data: Intent?): List<FrontAccount>? {
             return if (resultCode == Activity.RESULT_OK && data != null) {
                 getParcelableList(data, DATA)
+            } else null
+        }
+
+        fun getPayload(resultCode: Int, data: Intent?): FrontPayload? {
+            return if (resultCode == Activity.RESULT_OK && data != null) {
+                data.getParcelableExtraCompat(DATA)
             } else null
         }
     }

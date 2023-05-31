@@ -1,13 +1,15 @@
 package com.getfront.catalog.usecase
 
 import com.getfront.catalog.converter.JsonConverter
-import com.getfront.catalog.entity.CatalogEvent
+import com.getfront.catalog.entity.AccessTokenPayload
+import com.getfront.catalog.entity.AccessTokenResponse
 import com.getfront.catalog.entity.FrontAccount
-import com.getfront.catalog.entity.JsAccessTokens
 import com.getfront.catalog.entity.JsError
 import com.getfront.catalog.entity.JsType
-import com.getfront.catalog.entity.Payload
+import com.getfront.catalog.entity.LinkEvent
+import com.getfront.catalog.entity.TransferFinishedResponse
 import com.getfront.catalog.entity.Type
+import com.getfront.catalog.utils.printStackTrace
 import com.getfront.catalog.utils.runCatching
 import kotlinx.coroutines.CoroutineDispatcher
 
@@ -19,24 +21,36 @@ internal class ParseCatalogJsonUseCase(
         val event = converter.parse<JsType>(json)
 
         when (event.type) {
-            Type.done -> CatalogEvent.Done
-            Type.close -> CatalogEvent.Close
-            Type.showClose -> CatalogEvent.ShowClose
+            Type.done -> LinkEvent.Done
+            Type.close -> LinkEvent.Close
+            Type.showClose -> LinkEvent.ShowClose
             Type.brokerageAccountAccessToken -> {
-                val response = converter.parse<JsAccessTokens>(json)
-                val payload = requireNotNull(response.payload) { "Empty token payload" }
-                val accounts = mapAccounts(payload)
-                CatalogEvent.Connected(accounts)
+                try {
+                    val payload = converter.parse<AccessTokenResponse>(json).payload
+                    LinkEvent.Payload(payload)
+                } catch (e: Exception) {
+                    printStackTrace(e)
+                    error("Faced an error while parsing access token payload: ${e.message}")
+                }
+            }
+            Type.transferFinished -> {
+                try {
+                    val payload = converter.parse<TransferFinishedResponse>(json).payload
+                    LinkEvent.Payload(payload)
+                } catch (e: Exception) {
+                    printStackTrace(e)
+                    error("Faced an error while parsing transfer finished payload: ${e.message}")
+                }
             }
             Type.error -> {
                 val response = converter.parse<JsError>(json)
                 error(response.errorMessage ?: "Undefined error")
             }
-            else -> CatalogEvent.Undefined
+            else -> LinkEvent.Undefined
         }
     }
 
-    private fun mapAccounts(payload: Payload): List<FrontAccount> {
+    private fun mapAccounts(payload: AccessTokenPayload): List<FrontAccount> {
         return payload.accountTokens.map {
             FrontAccount(
                 accessToken = it.accessToken,

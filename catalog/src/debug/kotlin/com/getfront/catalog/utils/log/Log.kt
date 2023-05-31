@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.getfront.utils.log
+package com.getfront.catalog.utils.log
 
 import android.util.Log
 
