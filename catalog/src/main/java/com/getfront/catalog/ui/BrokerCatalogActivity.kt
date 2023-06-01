@@ -15,6 +15,7 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.getfront.catalog.BuildConfig
 import com.getfront.catalog.R
 import com.getfront.catalog.databinding.BrokerCatalogActivityBinding
 import com.getfront.catalog.entity.FrontPayload
@@ -54,6 +55,8 @@ internal class BrokerCatalogActivity : AppCompatActivity() {
         observeCatalogEvent()
         observeThrowable()
         openWebView(link)
+
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
     }
 
     override fun onBackPressed() {

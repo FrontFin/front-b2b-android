@@ -1,13 +1,13 @@
 package com.getfront.catalog.ui
 
-import android.util.Log
 import android.webkit.JavascriptInterface
+import com.getfront.catalog.utils.logD
 
 internal class JSBridge(private val callback: Callback) {
 
     @JavascriptInterface
     fun sendNativeMessage(payloadJson: String) {
-        Log.d("frontLog", "sendNativeMessage: $payloadJson")
+        logD("nativeMessage: $payloadJson")
         callback.onJsonReceived(payloadJson)
     }
 
