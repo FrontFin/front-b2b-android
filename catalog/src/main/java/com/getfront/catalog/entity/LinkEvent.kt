@@ -5,6 +5,5 @@ internal sealed interface LinkEvent {
     object Close : LinkEvent
     object ShowClose : LinkEvent
     object Undefined : LinkEvent
-    data class Connected(val accounts: List<FrontAccount>) : LinkEvent
     data class Payload(val payload: FrontPayload) : LinkEvent
 }

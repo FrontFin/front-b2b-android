@@ -1,13 +1,17 @@
 package com.getfront.android
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import com.getfront.android.databinding.ConnectActivityBinding
 import com.getfront.catalog.FrontCatalogContract
+import com.getfront.catalog.entity.AccessTokenPayload
+import com.getfront.catalog.entity.FrontAccount
+import com.getfront.catalog.entity.TransferFinishedErrorPayload
+import com.getfront.catalog.entity.TransferFinishedSuccessPayload
 import com.getfront.catalog.store.createPreferenceAccountStore
+import com.getfront.catalog.store.getAccountsFromPayload
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -24,20 +28,7 @@ class ConnectActivity : AppCompatActivity() {
         /**
          * Listen for accounts change.
          */
-        lifecycleScope.launch(Dispatchers.IO) {
-            accountStore.accounts().collect { accounts ->
-                runOnUiThread {
-                    binding.accountsText.text = accounts.joinToString("<br><br>") { account ->
-                        """
-                           <b>brokerName:</b> ${account.brokerName}<br>
-                           <b>accountId:</b> ${account.accountId.take(n = 20)}<br>
-                           <b>accessToken:</b> ${account.accessToken.take(n = 20)}...
-                           <b>refreshToken:</b> ${account.refreshToken?.take(n = 20)}...
-                        """
-                    }.let { HtmlCompat.fromHtml(it, HtmlCompat.FROM_HTML_MODE_LEGACY) }
-                }
-            }
-        }
+        subscribeAccounts()
         /**
          * Launch catalog.
          */
@@ -48,20 +39,47 @@ class ConnectActivity : AppCompatActivity() {
         }
     }
 
+    private fun subscribeAccounts() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            accountStore.accounts().collect { accounts ->
+                displayAccounts(accounts)
+            }
+        }
+    }
+
+    private fun displayAccounts(accounts: List<FrontAccount>) {
+        runOnUiThread {
+            binding.accountsText.text = toString(accounts)
+        }
+    }
+
     /**
-     * Receive connected accounts via ActivityResult.
+     * Receive result payload via ActivityResult.
      */
     private val catalogResultLauncher = registerForActivityResult(
         FrontCatalogContract()
-    ) { accounts ->
-        if (accounts != null) {
-            /**
-             * Save accounts to storage.
-             */
-            lifecycleScope.launch(Dispatchers.IO) {
-                accountStore.insert(accounts)
-            }
+    ) { payload ->
+        when (payload) {
+            is AccessTokenPayload -> onAccessTokenReceived(payload)
+            is TransferFinishedSuccessPayload -> onTransferSucceed(payload)
+            is TransferFinishedErrorPayload -> onTransferFailed(payload)
+            null -> Unit /* no-op */
         }
-        Log.i("FrontAccounts", accounts.toString())
+    }
+
+    private fun onAccessTokenReceived(payload: AccessTokenPayload) {
+        Toast.makeText(this, "Account connected!", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val accounts = getAccountsFromPayload(payload)
+            accountStore.insert(accounts)
+        }
+    }
+
+    private fun onTransferSucceed(payload: TransferFinishedSuccessPayload) {
+        Toast.makeText(this, "Transfer succeed: ${payload.txId}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onTransferFailed(payload: TransferFinishedErrorPayload) {
+        Toast.makeText(this, "Transfer failed: ${payload.errorMessage}", Toast.LENGTH_LONG).show()
     }
 }
