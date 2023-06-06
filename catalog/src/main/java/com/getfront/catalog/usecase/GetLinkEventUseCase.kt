@@ -11,7 +11,7 @@ import com.getfront.catalog.utils.printStackTrace
 import com.getfront.catalog.utils.runCatching
 import kotlinx.coroutines.CoroutineDispatcher
 
-internal class ParseCatalogJsonUseCase(
+internal class GetLinkEventUseCase(
     private val dispatcher: CoroutineDispatcher,
     private val converter: JsonConverter,
 ) {
