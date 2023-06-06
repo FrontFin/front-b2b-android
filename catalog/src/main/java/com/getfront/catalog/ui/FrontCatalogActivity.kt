@@ -78,7 +78,13 @@ internal class FrontCatalogActivity : AppCompatActivity() {
 
     private fun onBack() {
         binding.webView.run {
-            if (canGoBack()) evaluateJavascript("window.history.go(-1)", null) else finish()
+            when{
+                url?.endsWith("broker-connect/done") == true -> {
+                    showToast(getString(R.string.back_not_allowed))
+                }
+                canGoBack() -> evaluateJavascript("window.history.go(-1)", null)
+                else -> finish()
+            }
         }
     }
 
