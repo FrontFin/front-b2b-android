@@ -78,7 +78,7 @@ internal class FrontCatalogActivity : AppCompatActivity() {
 
     private fun onBack() {
         binding.webView.run {
-            when{
+            when {
                 url?.endsWith("broker-connect/done") == true -> {
                     showToast(getString(R.string.back_not_allowed))
                 }
