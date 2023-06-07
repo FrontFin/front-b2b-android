@@ -23,6 +23,6 @@ fun StringBuilder.add(key: String, value: String?) {
     if (value != null) appendLine("$key: $value")
 }
 
-fun logD(obj: Any?, TAG: String = "FrontCatalog") {
-    if (BuildConfig.DEBUG) Log.d(TAG, obj.toString())
+fun log(obj: Any?, TAG: String = "FrontCatalog") {
+    Log.d(TAG, obj.toString())
 }

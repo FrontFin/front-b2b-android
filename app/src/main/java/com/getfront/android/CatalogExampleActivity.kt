@@ -59,21 +59,21 @@ class CatalogExampleActivity : AppCompatActivity() {
     private fun getCatalogCallback() = object : FrontCatalogCallback {
 
         override fun onExit() {
-            logD("Catalog closed")
+            log("Catalog closed")
         }
 
         override fun onBrokerConnected(payload: AccessTokenPayload) {
-            logD("Broker connected. $payload")
+            log("Broker connected. $payload")
             saveAccounts(payload)
         }
 
         override fun onTransferFinished(payload: TransferFinishedPayload) {
             when (payload) {
                 is TransferFinishedSuccessPayload -> {
-                    logD("Transfer succeed. $payload")
+                    log("Transfer succeed. $payload")
                 }
                 is TransferFinishedErrorPayload -> {
-                    logD("Transfer failed. $payload")
+                    log("Transfer failed. $payload")
                 }
             }
         }
