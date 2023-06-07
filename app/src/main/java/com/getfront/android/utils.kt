@@ -1,5 +1,6 @@
 package com.getfront.android
 
+import android.util.Log
 import com.getfront.catalog.entity.FrontAccount
 
 fun toString(accounts: List<FrontAccount>): String {
@@ -20,4 +21,8 @@ fun toString(accounts: List<FrontAccount>): String {
 
 fun StringBuilder.add(key: String, value: String?) {
     if (value != null) appendLine("$key: $value")
+}
+
+fun logD(obj: Any?, TAG: String = "FrontCatalog") {
+    if (BuildConfig.DEBUG) Log.d(TAG, obj.toString())
 }

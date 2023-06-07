@@ -1,10 +1,9 @@
 package com.getfront.android
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.getfront.android.databinding.ConnectActivityBinding
+import com.getfront.android.databinding.CatalogExampleActivityBinding
 import com.getfront.catalog.entity.AccessTokenPayload
 import com.getfront.catalog.entity.FrontAccount
 import com.getfront.catalog.entity.TransferFinishedErrorPayload
@@ -20,7 +19,7 @@ import kotlinx.coroutines.launch
 class CatalogExampleActivity : AppCompatActivity() {
 
     private val binding by lazy(LazyThreadSafetyMode.NONE) {
-        ConnectActivityBinding.inflate(layoutInflater)
+        CatalogExampleActivityBinding.inflate(layoutInflater)
     }
     private val accountStore = createPreferenceAccountStore(this)
 
@@ -28,17 +27,17 @@ class CatalogExampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         /**
-         * Listen for accounts change
+         * Subscribe for accounts change
          */
         subscribeAccounts()
         /**
-         * Launch link
+         * Launch catalog
          */
         binding.connectBtn.setOnClickListener {
             launchCatalog(
                 this,
-                "https://",
-                getLinkCallback()
+                "catalogLink",
+                getCatalogCallback()
             )
         }
     }
@@ -57,23 +56,24 @@ class CatalogExampleActivity : AppCompatActivity() {
         }
     }
 
-    private fun getLinkCallback() = object : FrontCatalogCallback {
+    private fun getCatalogCallback() = object : FrontCatalogCallback {
 
         override fun onExit() {
-            /* no-op */
+            logD("Catalog closed")
         }
 
         override fun onBrokerConnected(payload: AccessTokenPayload) {
+            logD("Broker connected. $payload")
             saveAccounts(payload)
         }
 
         override fun onTransferFinished(payload: TransferFinishedPayload) {
             when (payload) {
-                is TransferFinishedErrorPayload -> {
-                    showToast("Transfer failed. ${payload.errorMessage}")
-                }
                 is TransferFinishedSuccessPayload -> {
-                    showToast("Transfer succeed")
+                    logD("Transfer succeed. $payload")
+                }
+                is TransferFinishedErrorPayload -> {
+                    logD("Transfer failed. $payload")
                 }
             }
         }
@@ -84,9 +84,5 @@ class CatalogExampleActivity : AppCompatActivity() {
             val accounts = getAccountsFromPayload(payload)
             accountStore.insert(accounts)
         }
-    }
-
-    private fun showToast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 }
