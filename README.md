@@ -60,26 +60,9 @@ class CatalogExampleActivity : AppCompatActivity() {
 }
 ```
 
-### Keep accounts in a safe place
+### Account storage
 
 You may keep accounts in built-in encrypted storage.
 ```kotlin
-import com.getfront.catalog.store.createPreferenceAccountStore
-import com.getfront.catalog.store.getAccountsFromPayload
-
-// Get instance
 private val accountStore: FrontAccountStore = createPreferenceAccountStore(context)
-
-// Subscribe for accounts
-lifecycleScope.launch(Dispatchers.IO) {
-    accountStore.accounts().collect { accounts ->
-        Log.d("FrontCatalog", "Accounts: $accounts")
-    }
-}
-
-// Save accounts
-lifecycleScope.launch(Dispatchers.IO) {
-    val accounts = getAccountsFromPayload(/* AccessTokenPayload */ payload)
-    accountStore.insert(accounts)
-}
 ```
