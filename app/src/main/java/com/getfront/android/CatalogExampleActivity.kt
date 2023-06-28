@@ -33,9 +33,8 @@ class CatalogExampleActivity : AppCompatActivity() {
                     is AccessTokenPayload -> {
                         log("Broker connected. $payload")
 
-                        // save accounts to secure storage (optional)
-                        val accounts = getAccountsFromPayload(payload)
-                        accountStore.insert(accounts)
+                        // save accounts into secure storage (optional)
+                        accountStore.insert(getAccountsFromPayload(payload))
                     }
                     is TransferFinishedSuccessPayload -> {
                         log("Transfer succeed. $payload")
@@ -50,7 +49,7 @@ class CatalogExampleActivity : AppCompatActivity() {
             }
         }
 
-        // Launch catalog with <catalogLink>
+        // Launch catalog with 'catalogLink'
         binding.connectBtn.setOnClickListener {
             launchCatalog(
                 this,
@@ -58,7 +57,7 @@ class CatalogExampleActivity : AppCompatActivity() {
             )
         }
 
-        // Subscribe for accounts change & display on UI
+        // Subscribe for accounts & display
         lifecycleScope.launch(Dispatchers.IO) {
             accountStore.accounts().collect { accounts ->
                 runOnUiThread {
