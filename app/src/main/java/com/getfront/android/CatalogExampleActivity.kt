@@ -41,7 +41,7 @@ class CatalogExampleActivity : AppCompatActivity() {
             )
         }
 
-        // Subscribe for accounts & display
+        // Subsctibe for accounts saved into secured storage
         lifecycleScope.launch(Dispatchers.IO) {
             accountStore.accounts().collect { accounts ->
                 runOnUiThread {

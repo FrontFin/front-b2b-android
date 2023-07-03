@@ -19,8 +19,8 @@ internal class FrontCatalogViewModel(
 
     internal val linkEvent = EventLiveData<LinkEvent>()
     internal val throwable = EventLiveData<Throwable>()
-    private val _payloads = mutableListOf<FrontPayload>()
-    internal val payloads: List<FrontPayload> get() = ArrayList(_payloads)
+    private val _payloads = mutableSetOf<FrontPayload>()
+    internal val payloads: List<FrontPayload> get() = _payloads.toList()
     internal var error: Throwable? = null; private set
 
     override fun onJsonReceived(payloadJson: String) {
