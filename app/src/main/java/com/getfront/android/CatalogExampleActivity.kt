@@ -37,7 +37,7 @@ class CatalogExampleActivity : AppCompatActivity() {
         // Launch catalog with 'catalogLink'
         binding.connectBtn.setOnClickListener {
             catalogLauncher.launch(
-                "catalogLink"
+                "https://front-web-platform-dev.azurewebsites.net:443/broker-connect?auth_code=nwlp2LuJm1nMW5r_Sk2KcjkkrLXnXQQliwDVjnwBweLRrNDVgmL8W-6qUzN3GFlKheAp7HaSnTFzCjxMg0PaHQ&transfer_token=fZwWPEDu%2bfUjRWgFSa4FXg%3d%3d.DNbG7lj4edJayEyCAZH%2fFy8GRBU%2fw4GUQvDV2fQQS%2bvf6Eh%2bf0EHVuYmqZAVcUaxPIJUc4BPG0ZYnYe1OLz%2fLcUD5AAAxhJju4e%2bGCpx1w3cXrCluNZRRP5mXY7M0W7UN5xJBmN4bl2tlE5lUer3Mg%3d%3d"
             )
         }
 

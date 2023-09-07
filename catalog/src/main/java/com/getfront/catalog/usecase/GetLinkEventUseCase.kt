@@ -1,5 +1,6 @@
 package com.getfront.catalog.usecase
 
+import androidx.annotation.VisibleForTesting
 import com.getfront.catalog.converter.JsonConverter
 import com.getfront.catalog.entity.AccessTokenResponse
 import com.getfront.catalog.entity.JsError
@@ -29,7 +30,8 @@ internal class GetLinkEventUseCase(
         }
     }
 
-    private fun onAccessToken(json: String) = try {
+    @VisibleForTesting
+    fun onAccessToken(json: String) = try {
         val payload = converter.parse<AccessTokenResponse>(json).payload
         LinkEvent.Payload(payload)
     } catch (expected: Exception) {
@@ -37,7 +39,8 @@ internal class GetLinkEventUseCase(
         error("Faced an error while parsing access token payload: ${expected.message}")
     }
 
-    private fun onTransferFinished(json: String) = try {
+    @VisibleForTesting
+    fun onTransferFinished(json: String) = try {
         val payload = converter.parse<TransferFinishedResponse>(json).payload
         LinkEvent.Payload(payload)
     } catch (expected: Exception) {
@@ -45,7 +48,8 @@ internal class GetLinkEventUseCase(
         error("Faced an error while parsing transfer finished payload: ${expected.message}")
     }
 
-    private fun onError(json: String): Nothing {
+    @VisibleForTesting
+    fun onError(json: String): Nothing {
         val response = converter.parse<JsError>(json)
         error(response.errorMessage ?: "Undefined error")
     }

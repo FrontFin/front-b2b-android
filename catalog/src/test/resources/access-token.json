@@ -1,0 +1,20 @@
+{
+  "type": "brokerageAccountAccessToken",
+  "payload": {
+    "accountTokens": [{
+      "account": {
+        "frontAccountId": "21e5yyf0-4d31-qq3e-871f-08dxxxx3546",
+        "accountId": "2wwwc105-5xx-4390-afxx-b70xxxxfa95",
+        "accountName": "xx9xxx226",
+        "fund": 5.26,
+        "cash": 5.26
+      },
+      "accessToken": "8/luwjLWf/QxxfilS2rkbw==.G7EoRN7XHWUiz8bE7foG3vwzIyv"
+    }],
+    "brokerType": "alpaca",
+    "brokerName": "Alpaca",
+    "brokerBrandInfo": {
+      "brokerLogo": "iVBORwxxxxxSUhEUgAAABgAAAAYCAMAAADXqc3KAAAA0lBMVEUAAA"
+    }
+  }
+}
