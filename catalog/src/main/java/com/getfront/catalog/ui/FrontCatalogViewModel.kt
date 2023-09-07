@@ -47,7 +47,7 @@ internal class FrontCatalogViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             return FrontCatalogViewModel(
-                GetLinkEventUseCase(Dispatchers.IO, JsonConverter)
+                GetLinkEventUseCase(Dispatchers.IO, JsonConverter.get())
             ) as T
         }
     }

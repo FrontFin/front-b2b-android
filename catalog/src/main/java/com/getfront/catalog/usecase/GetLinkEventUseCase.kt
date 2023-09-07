@@ -1,7 +1,7 @@
 package com.getfront.catalog.usecase
 
 import androidx.annotation.VisibleForTesting
-import com.getfront.catalog.converter.JsonConverter
+import com.getfront.catalog.converter.fromJson
 import com.getfront.catalog.entity.AccessTokenResponse
 import com.getfront.catalog.entity.JsError
 import com.getfront.catalog.entity.JsType
@@ -10,14 +10,15 @@ import com.getfront.catalog.entity.TransferFinishedResponse
 import com.getfront.catalog.entity.Type
 import com.getfront.catalog.utils.printStackTrace
 import com.getfront.catalog.utils.runCatching
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 
 internal class GetLinkEventUseCase(
     private val dispatcher: CoroutineDispatcher,
-    private val converter: JsonConverter,
+    private val converter: Gson,
 ) {
     suspend fun launch(json: String) = runCatching(dispatcher) {
-        val event = converter.parse<JsType>(json)
+        val event = converter.fromJson<JsType>(json)
 
         when (event.type) {
             Type.done -> LinkEvent.Done
@@ -32,7 +33,7 @@ internal class GetLinkEventUseCase(
 
     @VisibleForTesting
     fun onAccessToken(json: String) = try {
-        val payload = converter.parse<AccessTokenResponse>(json).payload
+        val payload = converter.fromJson<AccessTokenResponse>(json).payload
         LinkEvent.Payload(payload)
     } catch (expected: Exception) {
         printStackTrace(expected)
@@ -41,7 +42,7 @@ internal class GetLinkEventUseCase(
 
     @VisibleForTesting
     fun onTransferFinished(json: String) = try {
-        val payload = converter.parse<TransferFinishedResponse>(json).payload
+        val payload = converter.fromJson<TransferFinishedResponse>(json).payload
         LinkEvent.Payload(payload)
     } catch (expected: Exception) {
         printStackTrace(expected)
@@ -50,7 +51,7 @@ internal class GetLinkEventUseCase(
 
     @VisibleForTesting
     fun onError(json: String): Nothing {
-        val response = converter.parse<JsError>(json)
+        val response = converter.fromJson<JsError>(json)
         error(response.errorMessage ?: "Undefined error")
     }
 }
