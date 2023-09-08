@@ -5,7 +5,7 @@ import java.io.InputStreamReader
 import kotlin.streams.asSequence
 
 fun readFile(fileName: String): String {
-    val ins = ClassLoader.getSystemClassLoader().getResourceAsStream("access-token.json")
+    val ins = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName)
     return BufferedReader(InputStreamReader(ins)).use { it.readText() }
 }
 
