@@ -1,6 +1,6 @@
 package com.getfront.catalog.usecase
 
-import com.getfront.catalog.MainCoroutineTest
+import com.getfront.catalog.UseCaseTest
 import com.getfront.catalog.converter.fromJson
 import com.getfront.catalog.entity.AccessTokenPayload
 import com.getfront.catalog.entity.AccessTokenResponse
@@ -19,7 +19,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 import kotlin.IllegalStateException
 
-class GetLinkEventUseCaseTest : MainCoroutineTest() {
+class GetLinkEventUseCaseTest : UseCaseTest() {
 
     private val gson = mockk<Gson>()
 

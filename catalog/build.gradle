@@ -39,6 +39,8 @@ dependencies {
     testImplementation libs.junit
     testImplementation libs.io.mockk
     testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.kluent
+    testImplementation libs.androidx.core.testing
 }
 
 task validate(type: GradleBuild) {

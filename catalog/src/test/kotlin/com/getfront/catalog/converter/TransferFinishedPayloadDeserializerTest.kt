@@ -4,6 +4,7 @@ import com.getfront.catalog.entity.TransferFinishedErrorPayload
 import com.getfront.catalog.entity.TransferFinishedPayload
 import com.getfront.catalog.entity.TransferFinishedSuccessPayload
 import com.getfront.catalog.readFile
+import com.google.gson.JsonSyntaxException
 import org.junit.Assert.assertThrows
 import org.junit.Test
 
@@ -39,9 +40,9 @@ class TransferFinishedPayloadDeserializerTest {
     @Test
     fun testNull() {
         val json = "{status:'lorem'}"
-        val ex = assertThrows(IllegalStateException::class.java) {
+        val ex = assertThrows(JsonSyntaxException::class.java) {
             gson.fromJson<TransferFinishedPayload>(json)
         }
-        assert(ex.message == "unknown status 'lorem'")
+        assert(ex.message == "java.lang.IllegalStateException: unknown status 'lorem'")
     }
 }

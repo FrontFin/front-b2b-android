@@ -2,7 +2,7 @@ package com.getfront.catalog
 
 import org.junit.Rule
 
-open class MainCoroutineTest {
+open class UseCaseTest {
     @get:Rule
     val mainCoroutineRule = MainDispatcherRule()
 }
