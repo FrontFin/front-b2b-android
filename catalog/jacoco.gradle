@@ -9,7 +9,7 @@ tasks.withType(Test) {
     jacoco.excludes = ['jdk.internal.*']
 }
 
-def classDirs = fileTree("$buildDir/tmp/kotlin-classes/debug") {
+def classDirs = fileTree("$buildDir/tmp/kotlin-classes/release") {
     exclude(
             '**/catalog/entity/FrontAccount*.*',
             '**/catalog/store',
@@ -24,10 +24,10 @@ def classDirs = fileTree("$buildDir/tmp/kotlin-classes/debug") {
 
 def sourceDirs = files("$projectDir/src/main/java")
 
-def executionDirs = files("$buildDir/jacoco/testDebugUnitTest.exec")
+def executionDirs = files("$buildDir/jacoco/testReleaseUnitTest.exec")
 
 task jacocoTestReport(type: JacocoReport) {
-    dependsOn 'testDebugUnitTest'
+    dependsOn 'testReleaseUnitTest'
     group = "Reporting"
     description = "Code coverage report for Android & Unit tests."
 
@@ -41,7 +41,7 @@ task jacocoTestReport(type: JacocoReport) {
 }
 
 task jacocoCoverageVerification(type: JacocoCoverageVerification) {
-    dependsOn 'testDebugUnitTest'
+    dependsOn 'testReleaseUnitTest'
     group = "Verification"
     description = "Code coverage verification for Android & Unit tests."
 

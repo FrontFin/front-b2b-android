@@ -45,7 +45,7 @@ dependencies {
 }
 
 task validate(type: GradleBuild) {
-    tasks = ['ktlintCheck', 'detekt', 'lintRelease', 'test', 'assembleRelease']
+    tasks = ['ktlintCheck', 'detekt', 'lintRelease', 'jacocoCoverageVerification', 'assembleRelease']
 }
 
 task deploy(type: GradleBuild) {
