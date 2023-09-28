@@ -1,0 +1,34 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion '0.8.10'
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
+}
+
+task jacocoDebugReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+    group = "Reporting"
+    description = "Generate Jacoco coverage report for the debug build."
+    reports.html.enabled true
+
+    def excludes = [
+            '**/catalog/entity/FrontAccount*.*',
+            '**/catalog/store',
+            '**/catalog/ui/FrontCatalogActivity*.*',
+            '**/catalog/ui/FrontCatalogKt*.*',
+            '**/catalog/ui/FrontCatalogContract*.*',
+            '**/catalog/ui/FrontCatalogResult*.*',
+            '**/catalog/ui/JSBridge*.*',
+            '**/catalog/utils',
+    ]
+    def kClasses = "$buildDir/tmp/kotlin-classes/debug"
+    def kotlinClasses = fileTree(dir: kClasses, excludes: excludes)
+    classDirectories.from = files(kotlinClasses)
+
+    sourceDirectories.from = files(["$projectDir/src/main/java"])
+
+    executionData.from = files(["$buildDir/jacoco/testDebugUnitTest.exec"])
+}

@@ -4,7 +4,7 @@ apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 apply from: "$rootDir/gradle/publish.gradle"
-apply from: "$rootDir/gradle/jacoco.gradle"
+apply from: 'jacoco.gradle'
 
 android {
     namespace 'com.getfront.catalog'
