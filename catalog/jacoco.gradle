@@ -9,12 +9,8 @@ tasks.withType(Test) {
     jacoco.excludes = ['jdk.internal.*']
 }
 
-task jacocoDebugReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
-    group = "Reporting"
-    description = "Generate Jacoco coverage report for the debug build."
-    reports.html.enabled true
-
-    def excludes = [
+def classDirs = fileTree("$buildDir/tmp/kotlin-classes/debug") {
+    exclude(
             '**/catalog/entity/FrontAccount*.*',
             '**/catalog/store',
             '**/catalog/ui/FrontCatalogActivity*.*',
@@ -23,12 +19,41 @@ task jacocoDebugReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
             '**/catalog/ui/FrontCatalogResult*.*',
             '**/catalog/ui/JSBridge*.*',
             '**/catalog/utils',
-    ]
-    def kClasses = "$buildDir/tmp/kotlin-classes/debug"
-    def kotlinClasses = fileTree(dir: kClasses, excludes: excludes)
-    classDirectories.from = files(kotlinClasses)
+    )
+}
 
-    sourceDirectories.from = files(["$projectDir/src/main/java"])
+def sourceDirs = files("$projectDir/src/main/java")
 
-    executionData.from = files(["$buildDir/jacoco/testDebugUnitTest.exec"])
+def executionDirs = files("$buildDir/jacoco/testDebugUnitTest.exec")
+
+task jacocoTestReport(type: JacocoReport) {
+    dependsOn 'testDebugUnitTest'
+    group = "Reporting"
+    description = "Code coverage report for Android & Unit tests."
+
+    reports {
+        html.enabled true
+    }
+
+    classDirectories.from(classDirs)
+    sourceDirectories.from(sourceDirs)
+    executionData.from(executionDirs)
+}
+
+task jacocoCoverageVerification(type: JacocoCoverageVerification) {
+    dependsOn 'testDebugUnitTest'
+    group = "Verification"
+    description = "Code coverage verification for Android & Unit tests."
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.9
+            }
+        }
+    }
+
+    classDirectories.from(classDirs)
+    sourceDirectories.from(sourceDirs)
+    executionData.from(executionDirs)
 }
