@@ -5,6 +5,7 @@ sonar {
         property 'sonar.projectKey', sonarProjectKey
         property 'sonar.host.url', sonarHostUrl
         property 'sonar.login', sonarLogin
+        property 'sonar.projectVersion', android.defaultConfig.versionCode
         property 'sonar.projectName', 'front-b2b-android/catalog'
         property 'sonar.projectDescription', 'Front Finance Android SDK'
         property 'sonar.tests', 'src/test/kotlin'
