@@ -44,13 +44,3 @@ dependencies {
     testImplementation libs.kluent
     testImplementation libs.androidx.core.testing
 }
-
-task validate(type: GradleBuild) {
-    tasks = ['ktlintCheck', 'detekt', 'lintRelease',
-             'jacocoTestReport', 'jacocoCoverageVerification',
-             'sonar', 'assembleRelease']
-}
-
-task deploy(type: GradleBuild) {
-    tasks = ['validate', 'publishReleasePublicationToMavenRepository']
-}
