@@ -10,6 +10,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -150,6 +151,18 @@ internal class FrontCatalogActivity : AppCompatActivity() {
             webViewClient = WebClient()
             webChromeClient = ChromeClient()
             loadUrl(url)
+
+            // Inject JavaScript to notify BE for the SDK type
+            viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    viewTreeObserver.removeOnPreDrawListener(this)
+
+                    val javascriptCode = "window.postMessage('AndroidSDK@1.0.2', '*'); if(window.parent) {window.parent.postMessage('AndroidSDK@1.0.2', '*')}"
+                    evaluateJavascript(javascriptCode, null)
+
+                    return true
+                }
+            })
         }
     }
 
