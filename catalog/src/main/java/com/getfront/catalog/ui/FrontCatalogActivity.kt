@@ -157,7 +157,7 @@ internal class FrontCatalogActivity : AppCompatActivity() {
                 override fun onPreDraw(): Boolean {
                     viewTreeObserver.removeOnPreDrawListener(this)
 
-                    val javascriptCode = "window.postMessage('AndroidSDK@1.0.2', '*'); if(window.parent) {window.parent.postMessage('AndroidSDK@1.0.2', '*')}"
+                    val javascriptCode = "window.meshSdkPlatform='android';window.meshSdkVersion='1.0.2';if(window.parent) {window.parent.meshSdkPlatform='android';window.parent.meshSdkVersion='1.0.2';}"
                     evaluateJavascript(javascriptCode, null)
 
                     return true
