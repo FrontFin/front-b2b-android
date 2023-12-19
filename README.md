@@ -2,8 +2,11 @@
 
 Let your users connect brokerage accounts via Front Android SDK.
 
-__[DEPRECATED]__ 
-As of 12/7/2023 this package is no longer maintained and has been superseded by a new version. For the latest features, improvements, and bug fixes, please use our updated package. You can find it here: https://github.com/FrontFin/mesh-android-sdk. We encourage all users to migrate to the new package for continued support and updates.
+### 📌 Deprecation Notice
+
+As of Nov 7, 2023 this package is no longer maintained and has been superseded by a new version. For the latest features, improvements, and bug fixes, please use our updated package: [mesh-android-sdk](https://github.com/FrontFin/mesh-android-sdk). 
+
+We encourage all users to migrate to the new package for continued support and updates.
 
 ### Installation
 
